@@ -1,2 +1,2 @@
-docker-compose up -d
-docker-compose logs -f gitlab
+docker compose up -d
+docker compose logs -f gitlab
