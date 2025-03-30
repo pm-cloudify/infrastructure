@@ -7,17 +7,17 @@ services:
     hostname: 'localhost' 
     environment:
       GITLAB_OMNIBUS_CONFIG: |
-        external_url 'http://localhost:8929'  # Avoids port conflicts with host
-        gitlab_rails['gitlab_shell_ssh_port'] = 2224  # Avoids host SSH port (22)
+        external_url 'http://localhost:8929'
+        gitlab_rails['gitlab_shell_ssh_port'] = 2224
         nginx['listen_port'] = 80
     ports:
       - "8929:80"         
       - "2224:22"        
 
     volumes:
-      - ~/apps/gitlab/config:/etc/gitlab
-      - ~/apps/gitlab/logs:/var/log/gitlab
-      - ~/apps/gitlab/data:/var/opt/gitlab
+      - gitlab-config:/etc/gitlab
+      - gitlab-logs:/var/log/gitlab
+      - gitlab-data:/var/opt/gitlab
     networks:
       - gitlab-net
     privileged: true
@@ -27,3 +27,23 @@ services:
 networks:
   gitlab-net:
     driver: bridge
+
+volumes:
+  gitlab-config:
+    driver: local
+    driver_opts:
+      type: none
+      device: ~/apps/gitlab/config
+      o: bind
+  gitlab-logs:
+    driver: local
+    driver_opts:
+      type: none
+      device: ~/apps/gitlab/logs
+      o: bind
+  gitlab-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ~/apps/gitlab/data
+      o: bind
