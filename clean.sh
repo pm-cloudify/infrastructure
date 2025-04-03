@@ -1,6 +1,6 @@
-cd ./docker/db
+cd ./docker/db/core
 docker compose down --remove-orphans --volumes 
-cd ../rabbitmq
+cd ../../rabbitmq
 docker compose down --remove-orphans --volumes 
 cd ../gitlab
 docker compose down --remove-orphans --volumes 
