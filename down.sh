@@ -1,6 +1,6 @@
-cd ./docker/db/core
+cd ./docker/db
 docker compose down
-cd ../../rabbitmq
+cd ../rabbitmq
 docker compose down
 cd ../gitlab
 docker compose down
