@@ -1,0 +1,13 @@
+services:
+  db-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@example.com
+      - PGADMIN_DEFAULT_PASSWORD=Sample1234Pass
+    networks:
+      - postgres-net
+
+networks:
+  postgres-net:
+    driver: bridge
