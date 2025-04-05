@@ -1,21 +1,18 @@
 services:
-  # frontend app
   coder:
     image: coder:latest
     container_name: coder
     networks:
       - pm-cloud
-
-  # TODO: add all services
-  # main app logic
   app-logic:
     image: http-server:latest
     container_name: http_server
-    # TODO: include all configs
+    ports:
+      - "6060:80"
     environment:
-      - APP_ENV=production
+      - APP_ENV=development
       - APP_SECRET=test-secret
-      - WS_PORT=6060
+      - WS_PORT=80
       - SECRET_KEY=
       - ACCESS_KEY=
       - S3_BUCKET=
@@ -32,8 +29,6 @@ services:
       - DB_SSL_MODE=disable
     networks:
       - pm-cloud
-
-  # postgresql (db)
   postgres:
     image: postgres:latest
     container_name: local_postgres_test
@@ -41,28 +36,19 @@ services:
       POSTGRES_USER: test_user
       POSTGRES_PASSWORD: Sample1234Pass
       POSTGRES_DB: pm_cloudify_db
-    # ports:
-    #   - "5432:5432"
+    ports:
+      - "5432:5432"
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - pm-cloud
-
-  #  ui app used to interact with db
-  # pgadmin:
-  #   image: dpage/pgadmin4
-  #   container_name: pgadmin
-  #   environment:
-  #     - PGADMIN_DEFAULT_EMAIL=admin@example.com
-  #     - PGADMIN_DEFAULT_PASSWORD=Sample1234Pass
-  #   networks:
-  #     - pm-cloud
-
-  # rabbit mq (mb)
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
     hostname: test-rabbit
+    ports:
+      - "5672:5672"
+      - "15672:15672"
     environment:
       - RABBITMQ_DEFAULT_USER=admin
       - RABBITMQ_DEFAULT_PASS=TestRab1234
@@ -70,27 +56,23 @@ services:
       - pm-cloud
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
-
-  # api gateway
   api-gateway:
     image: gateway:latest
     container_name: gateway
     ports:
       - "8080:80"
     networks:
-      - pm-cloud-exposed
       - pm-cloud
+      - exposed-pm
 
-# network config
 networks:
-  pm-cloud-exposed:
+  exposed-pm:
     driver: bridge
 
   pm-cloud:
     driver: bridge
     internal: true
 
-# drivers
 volumes:
   postgres-data:
     driver: local
@@ -98,7 +80,6 @@ volumes:
       type: none
       device: ~/apps/postgres
       o: bind
-
   rabbitmq-data:
     driver: local
     driver_opts:
