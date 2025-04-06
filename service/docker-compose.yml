@@ -1,9 +1,11 @@
 services:
+  # frontend app
   coder:
     image: coder:latest
     container_name: coder
     networks:
       - pm-cloud
+  # postgres db
   postgres:
     image: postgres:latest
     container_name: local_postgres_test
@@ -17,6 +19,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     networks:
       - pm-cloud
+  # message broker
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -36,6 +39,7 @@ services:
       - pm-cloud
     volumes:
       - rabbitmq-data:/var/lib/rabbitmq
+  # business logic
   app-logic:
     image: http-server:latest
     container_name: http_server
@@ -66,7 +70,7 @@ services:
       - DB_SSL_MODE=disable
     networks:
       - pm-cloud
-
+  # api gateway
   api-gateway:
     image: gateway:latest
     container_name: gateway
@@ -80,7 +84,7 @@ services:
     networks:
       - pm-cloud
       - exposed-pm
-
+# defining networks
 networks:
   exposed-pm:
     driver: bridge
@@ -88,7 +92,7 @@ networks:
   pm-cloud:
     driver: bridge
     internal: true
-
+# volumes for persistent data
 volumes:
   postgres-data:
     driver: local
