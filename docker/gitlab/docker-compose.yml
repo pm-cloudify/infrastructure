@@ -8,10 +8,25 @@ services:
         external_url 'http://localhost:8929'
         gitlab_rails['gitlab_shell_ssh_port'] = 2224
         gitlab_rails['mirror_available'] = true
+        gitlab_rails['registry_enabled'] = true
+        gitlab_rails['gitlab_default_projects_features_container_registry'] = true
+
+        registry_external_url 'http://localhost:5678'
+
+        registry['enable'] = true
+        registry['log_directory'] = "/var/log/gitlab/registry"
+        registry['env_directory'] = "/opt/gitlab/etc/registry/env"
+
+        registry_nginx['enable'] = true
+        registry_nginx['listen_port'] = 5678
+        registry_nginx['listen_addr'] = '0.0.0.0'
+        registry_nginx['default_server'] = true
+
         prometheus['enable'] = false       
         nginx['listen_port'] = 80
     ports:
       - "8929:80"
+      - "5678:5678"
       - "2224:22"
     volumes:
       - gitlab-config:/etc/gitlab
@@ -25,8 +40,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '4'
-          memory: 10G
+          cpus: "10"
+          memory: 16G
 
 networks:
   gitlab-net:
