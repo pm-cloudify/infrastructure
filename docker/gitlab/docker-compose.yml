@@ -52,17 +52,17 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: ~/apps/gitlab/config
+      device: /opt/apps/gitlab/config
       o: bind
   gitlab-logs:
     driver: local
     driver_opts:
       type: none
-      device: ~/apps/gitlab/logs
+      device: /opt/apps/gitlab/logs
       o: bind
   gitlab-data:
     driver: local
     driver_opts:
       type: none
-      device: ~/apps/gitlab/data
+      device: /opt/apps/gitlab/data
       o: bind
